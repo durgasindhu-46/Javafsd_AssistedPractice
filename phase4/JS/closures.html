@@ -1,0 +1,47 @@
+<html>
+
+<body>
+    <h1> Closures--> Nested Functions--> access to an outer function's scope from an inner function</h1>
+    <script>
+        //Lexcical Scope
+        /*function init(){
+            var name="Manjika";
+            //inner function
+            function displayName(){
+            alert(name);
+        }
+        displayName();
+    }
+    
+    init();*/
+        //Closure- function return function
+        function init() {
+            var name = "Manjika";
+
+            function displayName() {
+                alert(name);
+            }
+            return displayName;
+        }
+
+        var display = init();
+        display();
+        //example2
+        function test() {
+            //parent block
+            if (true) {
+                //block scope
+                var a = "Hello";
+                let b = 1234;
+                const c = "how you are Doing";
+
+            }
+            console.log("Var: " + a);
+            console.log("let: " + b);
+            console.log("const: " + c);
+
+        }
+    </script>
+</body>
+
+</html>

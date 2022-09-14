@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<script src="myscript1.js"></script>
+
+<body>
+
+    <h2>JavaScript Callbacks</h2>
+
+    <p>Do a calculation and then display the result.</p>
+
+    <p id="demo"></p>
+
+    <script>
+        function myDisplayer(something) {
+            document.getElementById("demo").innerHTML = something;
+        }
+
+        function myCalculator(num1, num2, myCallback) {
+            let sum = num1 + num2;
+            myCallback(sum);
+        }
+
+        myCalculator(5, 5, myDisplayer);
+        ////Example2
+        document.write("example2");
+
+        function addition(num1, num2, mycall) {
+            var ans = num1 + num2;
+            mycall(ans);
+        }
+
+        function print(ans) {
+            alert("sum=" + ans);
+        }
+
+        function square(ans) {
+            alert("square=" + (ans * ans));
+        }
+        addition(5, 5, print);
+        addition(3, 2, square);
+        document.write("example3");
+
+        function greeting(name) {
+            console.log("Welcome !" + name);
+            document.write("Welcome !" + name);
+
+        }
+        //function paqssed as callback function
+        function fullname(fname, lname, callback) {
+            fullname = fname + " " + lname;
+            console.log("Fullname: " + fullname);
+            callback(fullname); //callback function
+        }
+
+        //passing greeting function to callback variable
+        //this is known as an argument or callback function
+
+        fullname("sindhu", "durga", greeting);
+    </script>
+
+</body>
+
+</html>

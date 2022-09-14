@@ -1,0 +1,47 @@
+<html>
+
+<head>
+</head>
+
+<body>
+    <script>
+        //simple functions
+        function display1() {
+            console.log("Display Function Called");
+            document.write("Display Function Called");
+        }
+
+
+        //parametrised function
+
+        function add(a, b) {
+
+            var num1 = a + b; //3+5=8
+            var num2 = a * b; //3*5=15
+
+            return num1 + num2; //8+15=23
+        }
+
+        var result = add(3, 5);
+
+        console.log("Result is: " + result);
+
+        display1();
+
+        var num1 = 89;
+
+        function display() {
+            var num2 = 90;
+            console.log("Internal block");
+            console.log("num2=" + num2);
+            console.log("num1=" + num1);
+        }
+        display();
+        console.log("External block");
+
+        console.log("num1=" + num1);
+        console.log("num2=" + num2); //as local value
+    </script>
+</body>
+
+</html>

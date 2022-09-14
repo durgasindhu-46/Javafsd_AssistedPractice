@@ -1,0 +1,47 @@
+<html>
+
+<head>
+</head>
+
+<body>
+    <script>
+        /*
+                                                        1) var - variant
+                                                        2) JS is not strict typesafe
+                                                        int num=56;
+                                                        num="hello";
+                                                        */
+
+        var num = 12;
+        alert(num);
+        num = "Yashwanth";
+        console.log(num);
+        //Data types- Number, String, boolean, null, undefined, Object, Symbol
+        var num1 = 90;
+        var num2 = 30;
+        var num3 = 30.00;
+        //addition in browse
+        var x = 10,
+            y = 20;
+        document.write("x+y: ", x + y);
+        console.log(typeof(num1));
+        console.log("==" + (num1 == num2)); //false
+        console.log("=" + (num1 = num2)); //30
+        console.log("===" + (num1 === num2)); //true 
+        console.log("===" + (num1 === num3)); //true 
+
+        var name1 = "Anisha";
+        var name2 = "anisha";
+        console.log(name1 == name2); //false
+        console.log(name1 = name2); //anisha
+        console.log(name1 === name2); //true
+
+        var num1 = 23;
+        var num2 = 78;
+        var num3 = 12;
+        console.log(num1 > num2 || num1 > num3); //true
+        console.log(num1 > num2 && num1 > num3); //false
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <script>
+        let square = function(num1) {
+            console.log("square of no=" + (num1 * num1));
+        };
+
+        square(4);
+
+        //setTimeout(function, timing)
+        setTimeout(function() {
+            console.log("square of no=" + (5 * 5));
+        }, 3000);
+
+
+
+
+        function even_odd() {
+            var num1 = prompt("Enter 1 value");
+            console.log(num1);
+            if (num1 % 2 == 0)
+                return "even";
+            else
+                return "odd";
+
+        }
+
+
+        var ans = even_odd();
+
+        console.log(ans);
+
+
+        var addition = function() {
+            console.log(12 + 23);
+        };
+
+
+
+
+        function even_odd() {
+            var num1 = prompt("Enter 2 value");
+            console.log(num1);
+            if (num1 % 2 == 0)
+                return "even";
+            else
+                return "odd";
+
+        }
+
+        var ans = even_odd(addition());
+
+        console.log(ans);
+
+        var addition = function() {
+            return (12 + 23);
+        };
+
+
+
+
+        function even_odd(num1) {
+            //var num1=prompt("Enter 1 value");
+            console.log(num1);
+            if (num1 % 2 == 0)
+                return "even";
+            else
+                return "odd";
+
+        }
+
+        var ans = even_odd(addition());
+
+        console.log(ans);
+    </script>
+</body>
+
+</html>
