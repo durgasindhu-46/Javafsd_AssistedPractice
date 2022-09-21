@@ -1,0 +1,22 @@
+<p class="class1">greeting works!</p>
+<input type="text" [(ngModel)]="name">
+<!--double binding//in the module.ts import formmodules -->
+<button (click)="greet()">greet</button> welcome {{name}}
+<!--name is interpolated it return back to ts file
+interpolation get value from.ts-->
+<!--disable button-->
+<button [disabled]="isDisabled">button property</button>
+<!--login-->
+<h1>My first Component</h1>
+<input type="text" [(ngModel)]="username">
+<input type="password" [(ngModel)]="password">
+<button (click)="validate()">validate</button> {{msg}}
+<h1 [style.color]="status=='error' ? 'red':'blue'">{{msg}}</h1>
+<div [className]="cssStringVar">{{msg}}</div>
+
+<!--products and parent to child binding-->
+<li *ngFor="let product of productList">
+    {{product.name}} {{product.price}}
+</li>
+<!--count and child to parent binding-->
+<button (click)="countChange(clickCount)">Change Count</button>
