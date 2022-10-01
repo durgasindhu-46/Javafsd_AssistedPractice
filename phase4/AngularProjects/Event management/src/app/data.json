@@ -1,0 +1,21 @@
+{
+    "todos": [{
+            "firstname": "durga ",
+            "lastname": "sindhu",
+            "email": "durga546@gmail.com",
+            "id": 1
+        },
+        {
+            "firstname": "gowthami",
+            "lastname": "indukuri",
+            "email": "gowthami@gmail.com",
+            "id": 2
+        },
+        {
+            "firstname": "vishnu",
+            "lastname": "gangaraju",
+            "email": "vishnu@gmail.com",
+            "id": 3
+        }
+    ]
+}
