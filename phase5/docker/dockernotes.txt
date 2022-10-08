@@ -1,0 +1,456 @@
+**************************docker******************
+*********************************************************
+STEP:1 AWS UBUNTU INSTANCE
+*********************************************************
+1. Prepare AWS Instance(Ubuntu Server 22.04 LTS (HVM), SSD Volume Type)
+2. Security : Add port no: 80 with Custom TCP Rule
+3. Download .pem Key and connect using Moba x-term
+
+*********************************************************
+STEP:2 CONNECT WITH MOBA X-TERM
+*********************************************************
+open moba x-term
+> cd d:      //here d: is my drive
+> cd phase-5  //phase-5 is a folder inside d: driver where .pen key is available
+
+>goto> aws >instance>choose your instance>connect>ssh>copy example key
+
+*********************************************************
+STEP:3 DOCKER INSTALLATION ON UBUNTU OS
+*********************************************************
+GOTO > GOOGLE> DOCKER INSTALLTION ON UBUNTU
+----------------------------------------------------
+LINK:https://docs.docker.com/engine/install/ubuntu/
+
+>sudo apt-get update
+>sudo apt-get install ca-certificates curl gnupg lsb-release
+
+>sudo mkdir -p /etc/apt/keyrings
+>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+>echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+>sudo apt-get update
+>sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+------TO VERIFY THE INSTALLTION------
+
+> sudo docker -v
+	output: Docker version 20.10.18, build b40c2f6
+
+> sudo docker --version
+
+> sudo docker info
+
+-----TO LIST DOCKER CONTAINERS-------
+> sudo docker container ls
+
+
+-----TO LIST THE DOCER IMAGES
+> sudo docker images
+
+-----TO CHECK THE DOCKER VOLUME-------
+> sudo docker volume  ls
+
+*******************************************************************
+STEP:4 PULL DOCKER IMAGES
+*******************************************************************
+> sudo docker pull ubuntu
+
+> sudo docker pull mysql
+
+*******************************************************************
+STEP: 5 PULL GIT HUB IMAGES(CUSTOM IMAGES)
+*******************************************************************
+
+LINK: https://github.com/Nikunj-Java/docker_master.git
+
+> git clone https://github.com/Nikunj-Java/docker_master.git
+> ls (to check available folders)
+> cd docker_master
+
+----let's prepare the image in a docker container-----
+
+> sudo docker build -t myimage . (. is mendatory)
+> sudo docker images (to check the image is prepared or not)
+
+----let's run the image in a docker container----------
+
+> sudo docker run -d --name mycontainer -p 80:80 myimage
+
+(this will run my image on port no 80 and container  name is mycontainer)
+
+> sudo docker container ls
+
+to check with app is running or not
+
+> curl localhost
+
+this will open index.php page
+
+/////////////////////////////////////////////////////
+2--------push docker images to docker hub
+*******************************************************************
+STEP:1 LOGGED IN TO DOCKER HUB
+*******************************************************************
+Create Account on DockerHub: 
+Link: https://hub.docker.com/
+-------------------------------------------------------
+
+> sudo docker login
+
+give user id:sindhuindukuri
+give password: ex:Indukuri@99
+[Note: password is not visible]
+
+if you are getting some permission denied error execute below code
+
+> sudo chmod 666 /var/run/docker.sock
+> docker login
+
+give user id:
+give password: 
+[Note: password is not visible]
+
+*******************************************************************
+STEP-2 PUSH AN IMAGE TO DOCKER HUB
+*******************************************************************
+EG: docker tag <name of your image> <username>/<name of directory- you can give any name>
+
+>sudo docker tag myimage nikunj0510/latestimage2
+
+>sudo docker push nikunj0510/latestimage2
+
+
+
+
+
+/////////////////////////////////////////////////////////
+*******************************************************************
+3-----------DEPLOY DOCKER CONTAINER ON DOCKER SWARM
+*******************************************************************
+
+we have already prepared one image 'myimage' pilled from git hub and pushed to docker hub
+
+continue...
+
+
+-------------------------------------------------------------------
+docker swarm: manageing multiple containers running on different host
+
+where we will initiate a swarm that node will become leader (Master) and another can join this node and you can use this as worker
+-------------------------------------------------------------------
+
+
+to set the permission
+
+> sudo chmod 666 /var/run/docker.sock
+
+STEP:1 INITIATE DOCKER SWARM
+
+> sudo docker swarm init (machine will become leader node)
+
+-------------------------------------------------------------------
+output:
+ Swarm initialized: current node (0s3e6ybnkj29s6c2erhru4kqi) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-6bt8rqegvrgi5d2y9dap9lxixp4p46vjawvvv7wmrs13fadrx0-alty48eq7j0e41jfgoy39lyxa 172.31.80.222:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+-------------------------------------------------------------------
+
+
+STEP:2 CREATE SERVICE IN THIS DOCKER SWARM
+
+> sudo docker service create -p 80:80 --name myservice myimage
+
+> curl localhost (you will see index.php file of docker_master)
+
+also you can copy your aws ubuntu instance public ip :80 on browser
+
+
+STEP:3 SCALE THE DOCKER CONTAINER ON DOCKER SWARM
+
+> docker service ps myservice (name of your service)
+
+
+----to scale service-----
+	> docker service scale myservice=3
+	> docker service ls
+	> docker service ps myservice
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////
+*************************************************************
+4-----------Distribute App Accross Swarm Cluster
+************************************************************************
+**********************************
+STEP:1 AWS EC2 UBUNTU INSTANCE
+**********************************
+
+> CREATE 2 aws ubuntu instance
+> make one as master and another as worker
+> copy the IP ADDRESS of MasterNode and WorkerNode
+
+****************************************************
+STEP: 2 INSTALL DOCKER IN BOTH INSTANCE 
+****************************************************
+
+goto>AWS>EC2>MASTER-instance>CONNECT>SSH>COPY THE KEY AND  CONNECT USING MOBA X-TERM
+
+
+>sudo apt-get update
+>sudo apt-get install ca-certificates curl gnupg lsb-release
+
+>sudo mkdir -p /etc/apt/keyrings
+>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+>echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+>sudo apt-get update
+>sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+------TO VERIFY THE INSTALLTION------
+
+> sudo docker -v
+
+
+*******************************************************************
+STEP:3 EDIT /etc/host file to define master and worker node's ip
+*******************************************************************
+
+for MASTERNODE:
+------------------
+> sudo vi /etc/hosts
+
+> press 'i'
+
+> copy_master_node_private_ip master
+
+> press  'esc'
+
+>:wq!
+
+>ping master
+
+if ping is started means all going right
+
+to stop the ping press ctr+c
+
+for WORKERNODE:
+-------------------
+> sudo vi /etc/hosts
+
+> press 'i'
+
+> copy_worker_node_private_ip worker
+
+> press  'esc'
+
+>:wq!
+
+>ping worker
+
+if ping is started means all going right
+
+to stop the ping press ctr+c
+
+*******************************************************************
+STEP:5 SWARM INITIALIZATION IN MASTER NODE
+*******************************************************************
+eg: sudo docker swarm init --advertise-adr <IP ADDRESS OF MASTER NODE>
+
+> sudo docker swarm init --advertise-adr master
+
+or
+
+> sudo docker swarm init --advertise-adr 172.31.90.235
+
+if error is coming 
+
+>sudo docker swarm init
+
+
+
+[Note:
+1. after successfull attempt you will get one token for connection with worker node
+2. copy that token and paste it to worker node by adding prefix 'sudo' <your token>
+]
+
+mytoken:
+--------
+
+docker swarm join --token SWMTKN-1-02c6vyoytsf55ot7iqet46hfocfvtvdv5rvf9y5ig6h0bebx7d-acbc1arddki79t6x7uuxw6m5h 172.31.90.235:2377
+
+
+goto>worker node
+
+run the token
+
+> sudo docker swarm join --token SWMTKN-1-02c6vyoytsf55ot7iqet46hfocfvtvdv5rvf9y5ig6h0bebx7d-acbc1arddki79t6x7uuxw6m5h 172.31.90.235:2377
+
+
+goto> master node
+
+>sudo  docker node ls
+
+once worker will join the swarm you will see the two names in th list
+
+
+*******************************************************************
+STEP: SERVICE WITH REPLICAS
+*******************************************************************
+> sudo docker service create --name myclusterdemo --publish 8080:8080 --replicas 2 myimage
+
+
+-----check the running service------
+
+> sudo docker service ps myclusterdemo
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+5------------Install Jenkins With Docker
+**************************************************************************************
+JENKINS WITH DOCKER
+*******************************************************************
+
+STEP:1 CREATE AWS UBUNTU INSTANCE WITH PORT NO:8080
+
+STEP:2 INSTALL DOCKER
+
+STEP:3 INSTALL JDK
+
+STEP:4 INSTALL MAVEN
+
+STEP:5 INSTALL JENKINS
+
+
+
+*******************************************************************
+STEP:1 CREATE AWS UBUNTU INSTANCE WITH PORT NO:8080
+*******************************************************************
+1. Prepare AWS Instance(Ubuntu Server 22.04 LTS (HVM), SSD Volume Type)
+2. Security : Add port no: 80 with Custom TCP Rule
+3. Download .pem Key and connect using Moba x-term
+
+open moba x-term
+> cd d:      //here d: is my drive
+> cd phase-5  //phase-5 is a folder inside d: driver where .pen key is available
+
+>goto> aws >instance>choose your instance>connect>ssh>copy example key
+
+
+*********************************************************
+STEP:2 DOCKER INSTALLATION ON UBUNTU OS
+*********************************************************
+GOTO > GOOGLE> DOCKER INSTALLTION ON UBUNTU
+----------------------------------------------------
+LINK:https://docs.docker.com/engine/install/ubuntu/
+
+>sudo apt-get update
+>sudo apt-get install ca-certificates curl gnupg lsb-release
+
+>sudo mkdir -p /etc/apt/keyrings
+>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+>echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+>sudo apt-get update
+>sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+------TO VERIFY THE INSTALLTION------
+
+> sudo docker -v
+	output: Docker version 20.10.18, build b40c2f6
+
+
+*******************************************************************
+STEP:3 INSTALL JDK
+*******************************************************************
+
+> sudo apt-get update
+> sudo apt install default-jdk -y
+
+
+*******************************************************************
+STEP:4 INSTALL MAVEN
+*******************************************************************
+
+> sudo apt-get update
+> sudo apt install maven -y
+
+*******************************************************************
+STEP:5 INSTALL JENKINS 
+*******************************************************************
+
+goto> google> how to download jenkins in ubuntu
+link: https://www.jenkins.io/doc/book/installing/linux/
+
+>curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+
+>echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+>sudo apt-get update
+>sudo apt-get install jenkins
+
+
+1. TO START WITH JENKINS
+------------------------------- 
+> sudo service jenkins start
+> sudo service jenkins status
+
+
+CONNECT: goto> AWS>EC2>Copy Public IP:8080 on browser hit enter
+
+
+2. TO GENERATE SECRET PASSWORD
+----------------------------------
+> sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+---to deal with permission denied error----
+> sudo chmod 777 /var/run/docker.sock
+
+
+copy the secret password to jenkins and start installtion
+
+3. FOR CONTINUOUS INTEGRATION (CI)
+--------------------------------------
+
+1. click on install suggested plugins 
+2. provide your credentials
+3. welcome to jenkins
+4. manage plugin>maven integration> click on install without restart
+5. goto>dashboard>create>new job>select freestyle project> give name>click ok
+6. give description
+7. sourcecode management
+	GIT:
+	URL:	https://github.com/Nikunj-Java/docker_master.git
+	BRANCHES TO BUILD: */master  or */main
+8. Build Trigger
+	POLL SCM:
+	H/2 * * * *
+
+9. CLICK ON APPLY AND SAVE
+
+10. BUILD THE PROJECT
+
+For creating a pipeline:
+1. click on install suggested plugins 
+2. provide your credentials
+3. welcome to jenkins
+4. manage plugin>maven integration> click on install without restart
+5. goto>dashboard>create>new job>select pipeline> give name>click ok
+6. give description
+7. write pipeline script
+8. Click on apply and save
+9. Build the project
